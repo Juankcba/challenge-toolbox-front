@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { Nav, Container, Spinner } from "react-bootstrap";
+import FileTable from "./components/FileTable";
+import { useDispatch, useSelector } from "react-redux";
+import { getFiles } from "./store/slices/files";
+import { useEffect } from "react";
 
 function App() {
+  const dispatch = useDispatch();
+  const { isLoading, files = [] } = useSelector((state) => state.files);
+
+  useEffect(() => {
+    dispatch(getFiles());
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header>
+        <Nav variant="pills" activeKey="1" className="custom-nav">
+          <Nav.Item>
+            <h1 className="nav-title">React Test App</h1>
+          </Nav.Item>
+        </Nav>
       </header>
+      <body>
+        <Container className="mt-2">
+          {isLoading ? (
+            <Spinner animation="border" role="status"></Spinner>
+          ) : (
+            <FileTable files={files} />
+          )}
+        </Container>
+      </body>
     </div>
   );
 }
